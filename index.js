@@ -36,12 +36,22 @@ app.post("/create-new-quiz", authForTeachers, portal.createQuiz);
 
 app.post("/update-quiz", authForTeachers, portal.updateQuiz);
 
+app.get("/get-all-quiz-attempts", authForTeachers, portal.getAllAttemptsForQuiz);
+
+app.get("/get-quiz-attempt-details-to-evaluate", authForTeachers, portal.getQuizAttemptDetails);
+
+app.post("/update-quiz-marks", authForTeachers, portal.updateQuizMarks);
+
 // apis for students
 app.get("/get-student-subjects", authForStudents, portal.getSubjectsOfAStudent);
 
 app.get("/get-quizzes-student", authForStudents, portal.getQuizzes);
 
 app.post("/submit-quiz", authForStudents, portal.submitQuiz);
+
+app.get("/get-student-quiz-attempts", authForStudents, portal.getStudentAttemptsForQuiz);
+
+app.get("/get-quiz-attempt-details", authForStudents, portal.getQuizAttemptDetails);
 
 var port = process.env.PORT || 8080;
 app.listen(port, () => {
