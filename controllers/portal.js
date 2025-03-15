@@ -123,4 +123,85 @@ var submitQuiz = async(req, res) => {
     }
 }
 
-module.exports = {getSubjectsOfAStudent, getSubjectsOfATeacher, getQuizzes, createQuiz, updateQuiz, submitQuiz};
+var getStudentAttemptsForQuiz = async(req, res) => {
+    try {
+        const {data, error} = await supabase.from("quiz-attempts").select("*").eq("quiz_id", req.query.quiz_id).eq("student_id", req.options.student_id);
+        if(error) {
+            throw error;
+        }
+        return res.status(200).json({
+            attempts: data
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "An unknown error occured"
+        });
+    }
+};
+
+var getAllAttemptsForQuiz = async(req, res) => {
+    try {
+        const {data, error} = await supabase.from("quiz-attempts").select("*").eq("quiz_id", req.query.quiz_id);
+        if(error) {
+            throw error;
+        }
+        return res.status(200).json({
+            attempts: data
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "An unknown error occured"
+        });
+    }
+};
+
+var getQuizAttemptDetails = async(req, res) => {
+    try {
+        const {data, error} = await supabase.from("quiz-attempts").select("*").eq("atmpt_id", req.query.attempt_id);
+        if(error) {
+            throw error;
+        }
+        return res.status(200).json({
+            details: {...data[0]}
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "An unknown error occured"
+        });
+    }
+};
+
+var updateQuizMarks = async(req, res) => {
+    try {
+        const {data, error} = await supabase.from("quiz-attempts").update(
+            {...req.body}
+        ).eq("atmpt_id", req.query.atmpt_id);
+        if(error) {
+            throw error;
+        }
+        return res.status(200).json({
+            message: "Marks updated successfully"
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "An unknown error occured"
+        });
+    }
+}
+
+module.exports = {
+    getSubjectsOfAStudent
+    , getSubjectsOfATeacher
+    , getQuizzes
+    , createQuiz
+    , updateQuiz
+    , submitQuiz
+    , getStudentAttemptsForQuiz
+    , getAllAttemptsForQuiz
+    , getQuizAttemptDetails
+    , updateQuizMarks
+};
