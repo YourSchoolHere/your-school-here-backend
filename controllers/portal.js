@@ -51,7 +51,10 @@ var getQuizzes = async(req, res) => {
         if(req.options.teacher_id)
             resp = await supabase.from("quizzes").select("*").eq("class_id", req.query.class_id);
         else
-            resp = await supabase.from("quizzes").select("*").eq("class_id", req.query.class_id).not("startingAt", "is", null).lte("startingAt", Date.now());
+            resp = await supabase.rpc('getquizzesforastudent', {
+              classid: req.query.class_id, 
+              studentid: req.options.student_id
+            })
         const {data, error} = resp;
         if(error) {
             throw error;
