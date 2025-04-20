@@ -3,7 +3,8 @@ const express = require("express");
 
 const {authForTeachers, authForStudents} = require("./middleware/auth");
 const users = require("./controllers/users");
-const portal = require("./controllers/portal");
+const quiz = require("./controllers/quiz");
+const announcements = require("./controllers/announcements");
 
 const app = express();
 app.use(express.json());
@@ -28,30 +29,34 @@ app.post("/login", users.login);
 app.get("/validate-token", users.validateToken);
 
 // apis for teachers
-app.get("/get-teacher-subjects", authForTeachers, portal.getSubjectsOfATeacher);
+app.get("/get-teacher-subjects", authForTeachers, quiz.getSubjectsOfATeacher);
 
-app.get("/get-quizzes-teacher", authForTeachers, portal.getQuizzes);
+app.get("/get-quizzes-teacher", authForTeachers, quiz.getQuizzes);
 
-app.post("/create-new-quiz", authForTeachers, portal.createQuiz);
+app.post("/create-new-quiz", authForTeachers, quiz.createQuiz);
 
-app.post("/update-quiz", authForTeachers, portal.updateQuiz);
+app.post("/update-quiz", authForTeachers, quiz.updateQuiz);
 
-app.get("/get-all-quiz-attempts", authForTeachers, portal.getAllAttemptsForQuiz);
+app.get("/get-all-quiz-attempts", authForTeachers, quiz.getAllAttemptsForQuiz);
 
-app.get("/get-quiz-attempt-details-to-evaluate", authForTeachers, portal.getQuizAttemptDetails);
+app.get("/get-quiz-attempt-details-to-evaluate", authForTeachers, quiz.getQuizAttemptDetails);
 
-app.post("/update-quiz-marks", authForTeachers, portal.updateQuizMarks);
+app.post("/update-quiz-marks", authForTeachers, quiz.updateQuizMarks);
+
+app.get("/get-announcements", authForTeachers, announcements.getAnnouncements);
+
+app.post("/create-announcement", authForTeachers, announcements.createAnnouncement);
 
 // apis for students
-app.get("/get-student-subjects", authForStudents, portal.getSubjectsOfAStudent);
+app.get("/get-student-subjects", authForStudents, quiz.getSubjectsOfAStudent);
 
-app.get("/get-quizzes-student", authForStudents, portal.getQuizzes);
+app.get("/get-quizzes-student", authForStudents, quiz.getQuizzes);
 
-app.post("/submit-quiz", authForStudents, portal.submitQuiz);
+app.post("/submit-quiz", authForStudents, quiz.submitQuiz);
 
-app.get("/get-student-quiz-attempts", authForStudents, portal.getStudentAttemptsForQuiz);
+app.get("/get-student-quiz-attempts", authForStudents, quiz.getStudentAttemptsForQuiz);
 
-app.get("/get-quiz-attempt-details", authForStudents, portal.getQuizAttemptDetails);
+app.get("/get-quiz-attempt-details", authForStudents, quiz.getQuizAttemptDetails);
 
 var port = process.env.PORT || 8080;
 app.listen(port, () => {

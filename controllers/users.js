@@ -5,6 +5,9 @@ var login = async (req, res) => {
     try {
         const {username, password} = req.body;
         let data = await supabase.from("students").select("student_id, name").eq("student_id", username);
+        if(data.error) {
+            throw data.error;
+        };
         if(data.data.length) {
             return res.status(200).json({
                 ...data.data[0],
@@ -12,6 +15,9 @@ var login = async (req, res) => {
             });
         };
         data = await supabase.from("teachers").select("teacher_id", "name").eq("teacher_id", username);
+        if(data.error) {
+            throw data.error;
+        };
         if(data.data.length) {
             return res.status(200).json({
                 ...data.data[0],
