@@ -39,4 +39,24 @@ var authForTeachers = (req, res, next) => {
     }
 }
 
-module.exports = {authForStudents, authForTeachers};
+var authForBoth = (req, res, next) => {
+    const token = req.headers.token;
+    try {
+        let obj = verifyToken(token);
+        if(!obj.student_id && !obj.teacher_id) {
+            return res.status(400).json({
+                message: "This token doesn't belong to a student or a teacher."
+            });
+        }
+        req.options = {...obj};
+        next();
+    }
+    catch (e) {
+        console.log(e);
+        res.status(400).json({
+            message: "Invalid token. Kindly login again."
+        });
+    }
+}
+
+module.exports = {authForStudents, authForTeachers, authForBoth};
